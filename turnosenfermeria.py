@@ -56,7 +56,7 @@ class TurnosEnfermeria:
         if len(calendario) != self.__len__():
             raise ValueError("el tamaño del calendario debe ser igual a: ", self.__len__())
 
-        
+
         turnosEnfermDict = self.getTurnosEnfermeria(calendario)
 
         
