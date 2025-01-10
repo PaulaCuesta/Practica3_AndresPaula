@@ -46,7 +46,7 @@ def cargaDatos (ruta_archivo):
 # In[21]:
 
 
-def CreaccionCalendarioTurnos (tamano_individuo, tamano_calendario, tamano_poblacion, p_cruce, p_mutacion, max_generaciones, verbose=True):
+def CreaccionCalendarioTurnos (tamano_individuo, tamano_calendario, tamano_poblacion, seleccion="SelTournament", p_cruce, cruce, p_mutacion, mutacion, algoritmo, max_generaciones, verbose=True):
     """
     Esta función crea un algoritmo genético simple, el cual evalúa a través de las distintas generaciones los distintos individuos, calendarios de turnos
     en este caso, para evaluar cual es mejor según los criterios establecidos.
@@ -71,13 +71,41 @@ def CreaccionCalendarioTurnos (tamano_individuo, tamano_calendario, tamano_pobla
     poblacion = toolbox.population()
    
 
-
     toolbox.register("evaluate", turnos.getCoste)
 
 
-    toolbox.register("select", tools.selTournament, tournsize=3)
-    toolbox.register("mate", tools.cxOnePoint)
-    toolbox.register("mutate", tools.mutFlipBit, indpb=1.0/tamano_individuo)
+    
+    if seleccion == "selTorunament":
+        toolbox.register("select", tools.selTournament, tournsize=3)
+    elif seleccion == "selBest":
+        toolbox.register("select", tools.selBest)
+    elif seleccion == "selRoulette":
+        toolbox.register("select", tools.selRoulette)
+    elif seleccion == "selStochasticUniversalSampling":
+        toolbox.register("select", tools.selStochasticUniversalSampling)
+    else:
+        raise ValueError(f"Tipo de selección no soportada: {seleccion}")
+
+
+    if cruce == "cxOnePoint":
+        toolbox.register("mate", tools.cxOnePoint)
+    elif cruce == "cxTwoPoint":
+        toolbox.register("mate", tools.cxTwoPoint)
+    elif cruce == "cxUniform":
+        toolbox.register("mate", tools.cxUniform)
+    elif cruce == "cxOrdered":
+        toolbox.register("mate", tools.cxOrdered)
+    else:
+        raise ValueError(f"Tipo de cruce no soportado: {cruce}")
+
+
+    if mutacion == "mutFlipBit":
+        toolbox.register("mutate", tools.mutFlipBit)
+    elif mutacion == "mutShuffleIndexes":
+        toolbox.register("mutate", tools.mutShuffleIndexes)
+    elif mutacion == "mutInversion":
+        toolbox.register("mutate", tools.mutInversion)
+    
 
 
     stats = tools.Statistics(lambda ind: ind.fitness.values)
