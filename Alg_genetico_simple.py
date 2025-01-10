@@ -9,6 +9,7 @@ from deap import creator, base, tools, algorithms
 import random
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 # In[25]:
@@ -52,12 +53,20 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario
     Esta función crea un algoritmo genético simple, el cual evalúa a través de las distintas generaciones los distintos individuos, calendarios de turnos
     en este caso, para evaluar cual es mejor según los criterios establecidos.
 
+    :param ruta_archivo: Ruta en la que se encuentra el archivo con las preferencias de los trabajadores del servicio
     :param tamano_individuo: Cadena de 21 bits repartida en 7 codones de 3 bits, que equivalen a la jornada semanal de cada uno de los enfermer@s.
     :param tamano_calendario: Filas del calendario, cada una de las cuales equivale a uno de los enfermer@s del servicio.
     :param tamano_poblacion: Número de individuos o calendarios que van a ser evaluados por el algoritmo genético simple.
+    :param seleccion: Método de selección que se va a emplear en el algoritmo.
     :param p_cruce: Probabilidad de que tenga lugar un cruce de un punto entre los distintos individuos, calendarios.
+    :param cruce: Tipo de cruce que se va a ejecutar entre los individuos.
     :param p_mutacion: Probabilidad de que tenga lugar una mutación de flip-bit entre los individuos de la población.
+    :param mutacion: Tipo de mutación que se aplica a la población en curso
+    :param algoritmo: Tipo de algoritmo genético que se va a ejecutar
     :param max_generaciones: Número de generaciones que se evalúan antes de encontrar la solución óptima al problema
+    :param mu: Número de individuos que deben ser seleccionados en cada generación.
+    :param lambd: Número de hijos que se deben producir en cada generación.
+    :param verbose: Con "True" o "False" nos permite indicar si queremos mostrar por pantalla el logbook o no
     :return poblacion_final: Población compuesta por los individuos que han sobrevidio al proceso evolutivo del algoritmo.
     :return logbook: Registro sobre la evolución de la población a lo largo de las generaciones.
     
@@ -65,6 +74,7 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario
     preferencias, enfermeras = cargaDatos (ruta_archivo)
     turnos = TurnosEnfermeria (enfermeras, preferencias)
     toolbox=base.Toolbox()
+    
     creator.create("ClaseAjusteMin", base.Fitness, weights=(-1.0,))
     creator.create("ClaseIndividuo", list, fitness=creator.ClaseAjusteMin)
 
@@ -142,8 +152,17 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario
 # In[ ]:
 
 def plot_evolucion(log, titulo="Evolución de Descriptores vs Generaciones"):
-    import matplotlib.pyplot as plt
-    import numpy as np
+
+     """
+    Esta función genera un gráfico que muestra la evolución de los valores de ajuste (mínimo, máximo y medio), así como la dispersión
+    a lo largo de las generaciones del un algoritmo genético a partir del obtejo Logbook del mismo.
+
+    :param log: Objeto logbook que contiene los datos de las generaciones y valores de fitness registrados.
+    :param titulo: Título del gráfico que se mostrará en la parte superior, con un valor por defecto.
+    
+    """
+    
+
     gen=log.select("gen")
     fit_mins=log.select("min")
     fit_maxs= log.select("max")
