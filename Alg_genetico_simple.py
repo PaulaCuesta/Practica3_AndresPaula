@@ -48,14 +48,12 @@ def cargaDatos (ruta_archivo):
 # In[21]:
 
 
-def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario, tamano_poblacion, seleccion, p_cruce, cruce, p_mutacion, mutacion, algoritmo, max_generaciones, mu, lambd, verbose):
+def CreaccionCalendarioTurnos (ruta_archivo, tamano_poblacion, seleccion, p_cruce, cruce, p_mutacion, mutacion, algoritmo, max_generaciones, mu, lambd, verbose):
     """
     Esta función crea un algoritmo genético simple, el cual evalúa a través de las distintas generaciones los distintos individuos, calendarios de turnos
     en este caso, para evaluar cual es mejor según los criterios establecidos.
 
     :param ruta_archivo: Ruta en la que se encuentra el archivo con las preferencias de los trabajadores del servicio
-    :param tamano_individuo: Cadena de 21 bits repartida en 7 codones de 3 bits, que equivalen a la jornada semanal de cada uno de los enfermer@s.
-    :param tamano_calendario: Filas del calendario, cada una de las cuales equivale a uno de los enfermer@s del servicio.
     :param tamano_poblacion: Número de individuos o calendarios que van a ser evaluados por el algoritmo genético simple.
     :param seleccion: Método de selección que se va a emplear en el algoritmo.
     :param p_cruce: Probabilidad de que tenga lugar un cruce de un punto entre los distintos individuos, calendarios.
@@ -71,8 +69,12 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario
     :return logbook: Registro sobre la evolución de la población a lo largo de las generaciones.
     
     """
+
+    tamano_individuo = 21
     preferencias, enfermeras = cargaDatos (ruta_archivo)
     turnos = TurnosEnfermeria (enfermeras, preferencias)
+    tamano_calendario = len (preferencias)
+    
     toolbox=base.Toolbox()
     
     creator.create("ClaseAjusteMin", base.Fitness, weights=(-1.0,))
@@ -153,7 +155,9 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario
 
 def plot_evolucion(log, titulo="Evolución de Descriptores vs Generaciones"):
 
-     """
+    
+
+    """
     Esta función genera un gráfico que muestra la evolución de los valores de ajuste (mínimo, máximo y medio), así como la dispersión
     a lo largo de las generaciones del un algoritmo genético a partir del obtejo Logbook del mismo.
 
@@ -161,8 +165,6 @@ def plot_evolucion(log, titulo="Evolución de Descriptores vs Generaciones"):
     :param titulo: Título del gráfico que se mostrará en la parte superior, con un valor por defecto.
     
     """
-    
-
     gen=log.select("gen")
     fit_mins=log.select("min")
     fit_maxs= log.select("max")
