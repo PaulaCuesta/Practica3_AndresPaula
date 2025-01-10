@@ -77,7 +77,7 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario
 
 
     
-    if seleccion == "selTorunament":
+    if seleccion == "selTournament":
         toolbox.register("select", tools.selTournament, tournsize=3)
     elif seleccion == "selBest":
         toolbox.register("select", tools.selBest)
@@ -102,7 +102,7 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario
 
 
     if mutacion == "mutFlipBit":
-        toolbox.register("mutate", tools.mutFlipBit)
+        toolbox.register("mutate", tools.mutFlipBit, indpb=1.0/tamano_individuo)
     elif mutacion == "mutShuffleIndexes":
         toolbox.register("mutate", tools.mutShuffleIndexes)
     elif mutacion == "mutInversion":
