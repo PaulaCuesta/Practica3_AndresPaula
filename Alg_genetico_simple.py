@@ -46,7 +46,7 @@ def cargaDatos (ruta_archivo):
 # In[21]:
 
 
-def CreaccionCalendarioTurnos (tamano_individuo, tamano_calendario, tamano_poblacion, seleccion="SelTournament", p_cruce, cruce, p_mutacion, mutacion, algoritmo, max_generaciones, verbose=True):
+def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario, tamano_poblacion, seleccion, p_cruce, cruce, p_mutacion, mutacion, max_generaciones, verbose=True):
     """
     Esta función crea un algoritmo genético simple, el cual evalúa a través de las distintas generaciones los distintos individuos, calendarios de turnos
     en este caso, para evaluar cual es mejor según los criterios establecidos.
@@ -61,6 +61,8 @@ def CreaccionCalendarioTurnos (tamano_individuo, tamano_calendario, tamano_pobla
     :return logbook: Registro sobre la evolución de la población a lo largo de las generaciones.
     
     """
+    preferencias, enfermeras = cargaDatos (ruta_archivo)
+    turnos = TurnosEnfermeria (enfermeras, preferencias)
     toolbox=base.Toolbox()
     creator.create("ClaseAjusteMin", base.Fitness, weights=(-1.0,))
     creator.create("ClaseIndividuo", list, fitness=creator.ClaseAjusteMin)
