@@ -107,7 +107,7 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_poblacion, seleccion, p_cruc
     elif cruce == "cxTwoPoint":
         toolbox.register("mate", tools.cxTwoPoint)
     elif cruce == "cxUniform":
-        toolbox.register("mate", tools.cxUniform)
+        toolbox.register("mate", tools.cxUniform, indpb=0.5)
     elif cruce == "cxOrdered":
         toolbox.register("mate", tools.cxOrdered)
     else:
@@ -117,7 +117,7 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_poblacion, seleccion, p_cruc
     if mutacion == "mutFlipBit":
         toolbox.register("mutate", tools.mutFlipBit, indpb=1.0/tamano_individuo)
     elif mutacion == "mutShuffleIndexes":
-        toolbox.register("mutate", tools.mutShuffleIndexes)
+        toolbox.register("mutate", tools.mutShuffleIndexes, indpb = 0.5)
     elif mutacion == "mutInversion":
         toolbox.register("mutate", tools.mutInversion)
     
@@ -137,7 +137,7 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_poblacion, seleccion, p_cruc
                                                   halloffame=hof,verbose=verbose)
 
     if algoritmo == "eaMuPlusLambda":
-        poblacion_final, logbook = algorithms.eaMuPlusLambda(poblacion, toolbox, mu=mu, lambd=lambd, cxpb=p_cruce, mutpb=p_mutacion, ngen=max_generaciones,                                                       stats=stats, halloffame=hof,verbose=verbose) 
+        poblacion_final, logbook = algorithms.eaMuPlusLambda(poblacion, toolbox, mu=mu, lambda=lambd, cxpb=p_cruce, mutpb=p_mutacion, ngen=max_generaciones,                                                       stats=stats, halloffame=hof,verbose=verbose) 
 
     if algoritmo == "eaSimpleWithElitism":
         poblacion_final, logbook= elit.eaSimpleWithElitism(poblacion, toolbox, cxpb=p_cruce, mutpb=p_mutacion, ngen=max_generaciones,stats=stats,
