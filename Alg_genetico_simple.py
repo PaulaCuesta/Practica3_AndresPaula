@@ -137,7 +137,7 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_poblacion, seleccion, p_cruc
                                                   halloffame=hof,verbose=verbose)
 
     if algoritmo == "eaMuPlusLambda":
-        poblacion_final, logbook = algorithms.eaMuPlusLambda(poblacion, toolbox, mu=mu, lambda=lambd, cxpb=p_cruce, mutpb=p_mutacion, ngen=max_generaciones,                                                       stats=stats, halloffame=hof,verbose=verbose) 
+        poblacion_final, logbook = algorithms.eaMuPlusLambda(poblacion, toolbox, mu=mu, lambd=lambd, cxpb=p_cruce, mutpb=p_mutacion, ngen=max_generaciones,                                                       stats=stats, halloffame=hof,verbose=verbose) 
 
     if algoritmo == "eaSimpleWithElitism":
         poblacion_final, logbook= elit.eaSimpleWithElitism(poblacion, toolbox, cxpb=p_cruce, mutpb=p_mutacion, ngen=max_generaciones,stats=stats,
