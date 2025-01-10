@@ -15,6 +15,7 @@ import pandas as pd
 
 
 from turnosenfermeria import TurnosEnfermeria
+import elitism as elit
 
 
 # In[ ]:
@@ -46,7 +47,7 @@ def cargaDatos (ruta_archivo):
 # In[21]:
 
 
-def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario, tamano_poblacion, seleccion, p_cruce, cruce, p_mutacion, mutacion, max_generaciones, verbose=True):
+def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario, tamano_poblacion, seleccion, p_cruce, cruce, p_mutacion, mutacion, algoritmo, max_generaciones, mu, lambd, verbose):
     """
     Esta función crea un algoritmo genético simple, el cual evalúa a través de las distintas generaciones los distintos individuos, calendarios de turnos
     en este caso, para evaluar cual es mejor según los criterios establecidos.
@@ -118,8 +119,19 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario
 
 
     hof = tools.HallOfFame(1)
-    poblacion_final, logbook= algorithms.eaSimple(poblacion, toolbox, cxpb=p_cruce, mutpb=p_mutacion, ngen=max_generaciones,stats=stats,
+
+    if algoritmo == "eaSimple":
+        poblacion_final, logbook= algorithms.eaSimple(poblacion, toolbox, cxpb=p_cruce, mutpb=p_mutacion, ngen=max_generaciones,stats=stats,
                                                   halloffame=hof,verbose=verbose)
+
+    if algoritmo == "eaMuPlusLambda":
+        poblacion_final, logbook = algorithms.eaMuPlusLambda(poblacion, toolbox, mu=mu, lambd=lambd, cxpb=p_cruce, mutpb=p_mutacion, ngen=max_generaciones,                                                       stats=stats, halloffame=hof,verbose=verbose) 
+
+    if algoritmo == "eaSimpleWithElitism":
+        poblacion_final, logbook= elit.eaSimpleWithElitism(poblacion, toolbox, cxpb=p_cruce, mutpb=p_mutacion, ngen=max_generaciones,stats=stats,
+                                                  halloffame=hof,verbose=verbose)
+        
+        
 
     
     turnos.mostrarInfoCalendario (hof[0])
@@ -128,6 +140,30 @@ def CreaccionCalendarioTurnos (ruta_archivo, tamano_individuo, tamano_calendario
 
 
 # In[ ]:
+
+def plot_evolucion(log, titulo="Evolución de Descriptores vs Generaciones"):
+    import matplotlib.pyplot as plt
+    import numpy as np
+    gen=log.select("gen")
+    fit_mins=log.select("min")
+    fit_maxs= log.select("max")
+    fit_means=log.select("avg")
+    
+    fig,ax = plt.subplots()
+    
+    ax.plot(gen,fit_mins,color="green")
+    ax.plot(gen,fit_maxs,color="red")
+    ax.plot(gen,fit_means,linestyle="--", color="blue")
+    fit_mins=np.array(fit_mins)
+    fit_maxs=np.array(fit_maxs)   
+    ax.fill_between(gen,fit_mins,fit_maxs,where=(fit_maxs>=fit_mins), facecolor='y', alpha=0.2)
+    
+    ax.set_xlabel("Generación")
+    ax.set_ylabel("Ajuste (fitness)")
+    ax.set_ylim([0,110])
+    ax.legend(["Min","Max","Media"])
+    ax.set_title(titulo)
+    plt.grid(True)
 
 
 
